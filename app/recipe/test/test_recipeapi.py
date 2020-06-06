@@ -5,10 +5,39 @@ from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APIClient
 
-from core.models import Recipe
-from recipe.serializers import RecipeSerializer
+from core.models import Recipe, Tag, Ingredient
+from recipe.serializers import RecipeSerializer, RecipeDetailSerializer
 
 RECIPE_URL = reverse('recipe:recipe-list')
+
+
+def detail_url(recipe_id):
+    """
+    Return recipe detail url
+    :param recipe_id: recipe object id
+    :return: url for recipe detail
+    """
+    return reverse('recipe:recipe-detail', args=[recipe_id])
+
+
+def sample_tag(user, name='Main course'):
+    """
+    Create and return a sample tag
+    :param user: User(custom) object
+    :param name: name of the tag
+    :return: Tag object
+    """
+    return Tag.objects.create(user=user, name=name)
+
+
+def sample_ingredient(user, name='Cinnamon'):
+    """
+    Create and return a sample ingredient
+    :param user: User(custom) object
+    :param name: name of the ingredient
+    :return: Ingredient object
+    """
+    return Ingredient.objects.create(user=user, name=name)
 
 
 def sample_recipe(user, **params):
@@ -16,7 +45,7 @@ def sample_recipe(user, **params):
     Create and return a sample recipe
     :param user: user object
     :param params: other parameter for recipe
-    :return: recipe object
+    :return: Recipe object
     """
     defaults = {
         'title': 'default title',
@@ -94,4 +123,21 @@ class PrivateRecipeApiTest(TestCase):
 
         self.assertEqual(res.status_code, status.HTTP_200_OK)
         self.assertEqual(len(res.data), 1)
+        self.assertEqual(res.data, serializer.data)
+
+    def test_view_recipe_detail(self):
+        """
+        Test viewing a recipe detail
+        :return: None
+        """
+        recipe = sample_recipe(user=self.user)
+        recipe.tags.add(sample_tag(user=self.user))
+        recipe.ingredients.add(sample_ingredient(user=self.user))
+
+        url = detail_url(recipe_id=recipe.id)
+
+        res = self.apiclient.get(url)
+
+        serializer = RecipeDetailSerializer(recipe)
+
         self.assertEqual(res.data, serializer.data)
