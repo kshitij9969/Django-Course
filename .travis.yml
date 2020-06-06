@@ -10,5 +10,6 @@ services:
 before_script: pip install docker-compose
 
 script:
-  - docker-compose build
+  - docker-compose down
+  - rmdir /core/migrations
   - docker-compose run app sh -c "python manage.py test && flake8"
