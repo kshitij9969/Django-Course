@@ -46,7 +46,7 @@ class PrivateIngredientApiTest(TestCase):
         :return: None
         """
         self.user = get_user_model().objects.create_user(
-            email='test@test.com',
+            email='test5@test5.com',
             password='testpass'
         )
         self.apiclient = APIClient()
@@ -57,8 +57,14 @@ class PrivateIngredientApiTest(TestCase):
         Test retrieving a list of ingredients
         :return: None
         """
-        Ingredient.objects.create(user=self.user, name='Kale')
-        Ingredient.objects.create(user=self.user, name='Salt')
+        Ingredient.objects.create(
+            user=self.user,
+            name='Kale'
+        )
+        Ingredient.objects.create(
+            user=self.user,
+            name='Salt'
+        )
 
         res = self.apiclient.get(INGREDIENT_URL)
 
@@ -74,7 +80,7 @@ class PrivateIngredientApiTest(TestCase):
         :return: None
         """
         user_two = get_user_model().objects.create_user(
-            email='test1@test1.com',
+            email='kshitij@singh.com',
             password='testpass'
         )
         Ingredient.objects.create(

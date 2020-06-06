@@ -82,7 +82,7 @@ class PrivateTagApiTest(TestCase):
         :return: None
         """
         user_two = get_user_model().objects.create_user(
-            email='test1@test1.com',
+            email='test6@test6.com',
             password='password1',
         )
         Tag.objects.create(
