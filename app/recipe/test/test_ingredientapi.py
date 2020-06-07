@@ -132,7 +132,7 @@ class PrivateIngredientApiTest(TestCase):
         Test filtering ingredients by those assigned to recipes
         :return: None
         """
-        ingredient_one  = Ingredient.objects.create(
+        ingredient_one = Ingredient.objects.create(
             user=self.user,
             name='Apples'
         )
